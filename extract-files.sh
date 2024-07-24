@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (C) 2018-2023 The LineageOS Project
+# Copyright (C) 2018-2024 The LineageOS Project
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -13,16 +13,14 @@ function blob_fixup() {
     vendor/lib64/hw/audio.primary.sdm845.so)
         "${PATCHELF}" --replace-needed "libcutils.so" "libprocessgroup.so" "${2}"
         ;;
-    vendor/lib64/libgoodixfingerprintd_binder.so)
-        "${PATCHELF}" --add-needed "libbinder_shim.so" "${2}"
-        ;;
-    vendor/lib64/libSNPE.so)
-        "${PATCHELF_0_17_2}" --replace-needed "libstdc++.so" "libstdc++_vendor.so" "${2}"
-        ;;
-    vendor/bin/ultrasonicd)
-        "${PATCHELF}" --remove-needed "libmedia.so" "${2}"
+    vendor/lib64/libgoodixhwfingerprint.so)
+        "${PATCHELF}" --remove-needed "libkeymaster_messages.so" "${2}"
+        "${PATCHELF}" --remove-needed "libsoftkeymasterdevice.so" "${2}"
         ;;
     vendor/lib64/vendor.goodix.hardware.fingerprintextension@1.0.so)
+        "${PATCHELF}" --replace-needed "libhidlbase.so" "libhidlbase-v32.so" "${2}"
+        ;;
+    vendor/lib64/vendor.goodix.hardware.biometrics.fingerprint@2.1.so)
         "${PATCHELF}" --replace-needed "libhidlbase.so" "libhidlbase-v32.so" "${2}"
         ;;
     esac
@@ -36,7 +34,7 @@ fi
 
 set -e
 
-export DEVICE=nx606j
+export DEVICE=nx616j
 export DEVICE_COMMON=sdm845-common
 export VENDOR=nubia
 
